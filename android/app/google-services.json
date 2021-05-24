@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "781630388969",
+    "project_id": "hilf-199aa",
+    "storage_bucket": "hilf-199aa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781630388969:android:303838f6da579e1af28e78",
+        "android_client_info": {
+          "package_name": "com.example.hilf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "781630388969-g8lpdi4kms926qag6jf08e14mamj6n9m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBV9sXVMDSM6ETsjKj_HdI0HS8LsiWfX8o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "781630388969-g8lpdi4kms926qag6jf08e14mamj6n9m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
