@@ -5,8 +5,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hilf/constants/Constantcolors.dart';
 import 'package:hilf/screens/homePage.dart';
 import 'package:hilf/services/authentication.dart';
+import 'package:hilf/services/firebaseOperations.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+
+import 'landingPageUtilities.dart';
 
 class LandingServices with ChangeNotifier {
   TextEditingController userNameController = TextEditingController();
@@ -24,33 +28,78 @@ class LandingServices with ChangeNotifier {
         fontSize: 16.0);
   }
 
+  showUserAvatar(BuildContext context) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            color: Colors.white,
+            height: MediaQuery.of(context).size.height * 0.5,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                CircleAvatar(
+                    radius: 80,
+                    backgroundImage: FileImage(
+                      Provider.of<LandingUtils>(context, listen: false)
+                          .userAvatar,
+                    )),
+                MaterialButton(
+                    color: ConstantColors().accentColor,
+                    onPressed: () {
+                      Provider.of<LandingUtils>(context, listen: false)
+                          .pickUserAvatar(context, ImageSource.gallery);
+                    },
+                    child: Text(
+                      "Select Image",
+                      style: TextStyle(color: Colors.white),
+                    )),
+
+                //confirm image
+                MaterialButton(
+                    color: ConstantColors().greenColor,
+                    onPressed: () {
+                      Provider.of<FirebaseOperations>(context, listen: false)
+                          .uploadUserAvatar(context)
+                          .whenComplete(() {
+                        signInSheet(context);
+                      });
+                    },
+                    child: Text(
+                      "Save",
+                      style: TextStyle(color: Colors.white),
+                    )),
+              ],
+            ),
+          );
+        });
+  }
+
   Widget passWordLessSignIn(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.4,
       width: MediaQuery.of(context).size.width,
       child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection("allUsers").snapshots(),
+        stream: FirebaseFirestore.instance.collection("users").snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else {
             return ListView(
               children: snapshot.data.docs
                   .map((DocumentSnapshot documentSnapshot) => ListTile(
                         leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              documentSnapshot[0].data()['userImage']),
+                          backgroundImage:
+                              NetworkImage(documentSnapshot['userImage']),
                         ),
-                        title: Text(documentSnapshot[0].data()['userName']),
-                        subtitle: Text(documentSnapshot[0].data()['userEmail']),
+                        title: Text(documentSnapshot['userName']),
+                        subtitle: Text(documentSnapshot['userEmail']),
                         trailing: IconButton(
                           icon: Icon(Icons.delete),
                           onPressed: () {},
                         ),
                       ))
                   .toList(),
-            );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
             );
           }
         },
@@ -68,12 +117,16 @@ class LandingServices with ChangeNotifier {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.5,
+              // height: MediaQuery.of(context).size.height * 0.5,
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
                   SizedBox(height: 20),
                   CircleAvatar(
+                    radius: 80,
+                    backgroundImage: FileImage(
+                        Provider.of<LandingUtils>(context, listen: false)
+                            .getUserAvatar),
                     backgroundColor: Colors.green,
                   ),
                   Divider(),
@@ -112,7 +165,22 @@ class LandingServices with ChangeNotifier {
                         Provider.of<Authentication>(context, listen: false)
                             .registerAccount(userEmailController.text,
                                 userPasswordController.text)
-                            .whenComplete(() => Navigator.pushReplacement(
+                            .whenComplete(() {
+                          print("creating user collection");
+                          Provider.of<FirebaseOperations>(context,
+                                  listen: false)
+                              .createUserCollection(context, {
+                            //sending data map
+                            'userId': Provider.of<Authentication>(context,
+                                    listen: false)
+                                .getUserId,
+                            'userName': userNameController.text,
+                            'userEmail': userEmailController.text,
+                            'userImage': Provider.of<LandingUtils>(context,
+                                    listen: false)
+                                .getUserAvatarUrl,
+                          });
+                        }).whenComplete(() => Navigator.pushReplacement(
                                 context,
                                 PageTransition(
                                     child: HomePage(),

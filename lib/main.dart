@@ -2,10 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hilf/constants/Constantcolors.dart';
-import 'package:hilf/helpers/landingPageHelper.dart';
+import 'package:hilf/screens/LandingPage/landingPageHelper.dart';
+import 'package:hilf/screens/LandingPage/landingPageUtilities.dart';
+import 'package:hilf/screens/LandingPage/landingServices.dart';
 import 'package:hilf/screens/splashScreen.dart';
 import 'package:hilf/services/authentication.dart';
-import 'package:hilf/services/landingServices.dart';
+import 'package:hilf/services/firebaseOperations.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -34,6 +36,12 @@ class MyApp extends StatelessWidget {
         home: SplashScreen(),
       ),
       providers: [
+        ChangeNotifierProvider(
+          create: (_) => LandingUtils(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FirebaseOperations(),
+        ),
         ChangeNotifierProvider(
           create: (_) => LandingPageHelper(),
         ),

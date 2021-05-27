@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hilf/constants/Constantcolors.dart';
+import 'package:hilf/screens/LandingPage/landingPageUtilities.dart';
+import 'package:hilf/screens/LandingPage/landingServices.dart';
 import 'package:hilf/screens/homePage.dart';
 import 'package:hilf/services/authentication.dart';
-import 'package:hilf/services/landingServices.dart';
+import 'package:hilf/services/firebaseOperations.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
@@ -178,10 +181,10 @@ class LandingPageHelper with ChangeNotifier {
                     ),
                     MaterialButton(
                       onPressed: () {
-                        Provider.of<LandingServices>(context, listen: false)
-                            .registerSheet(context);
+                        Provider.of<LandingUtils>(context, listen: false)
+                            .selectAvatarOptionSheet(context);
                       },
-                      child: Text("Sign up"),
+                      child: Text("Sign in"),
                     ),
                   ],
                 )

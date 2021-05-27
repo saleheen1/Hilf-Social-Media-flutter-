@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hilf/constants/Constantcolors.dart';
-import 'package:hilf/helpers/landingPageHelper.dart';
+import 'package:hilf/screens/LandingPage/landingPageHelper.dart';
 import 'package:provider/provider.dart';
 
 class LandingPage extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hilf/constants/Constantcolors.dart';
-import 'package:hilf/screens/landingPage.dart';
+import 'package:hilf/screens/LandingPage/landingPage.dart';
 import 'package:page_transition/page_transition.dart';
 
 class SplashScreen extends StatefulWidget {
